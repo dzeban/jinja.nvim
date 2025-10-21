@@ -16,38 +16,39 @@ vim.bo.commentstring = "{# %s #}"
 
 -- Set up matching words for vim-matchup plugin
 -- Format: start:middle:end
+-- Supports whitespace control with {%- and -%}
 vim.b.match_words = table.concat({
   -- Core control structures
-  "{%\\s*\\<if\\>.*%}:{%\\s*\\<elif\\>.*%}:{%\\s*\\<else\\>\\s*%}:{%\\s*\\<endif\\>\\s*%}",
-  "{%\\s*\\<for\\>.*%}:{%\\s*\\<else\\>\\s*%}:{%\\s*\\<endfor\\>\\s*%}",
+  "{%-\\?\\s*\\<if\\>.*-\\?%}:{%-\\?\\s*\\<elif\\>.*-\\?%}:{%-\\?\\s*\\<else\\>\\s*-\\?%}:{%-\\?\\s*\\<endif\\>\\s*-\\?%}",
+  "{%-\\?\\s*\\<for\\>.*-\\?%}:{%-\\?\\s*\\<else\\>\\s*-\\?%}:{%-\\?\\s*\\<endfor\\>\\s*-\\?%}",
 
   -- Block definitions
-  "{%\\s*\\<block\\>.*%}:{%\\s*\\<endblock\\>.*%}",
+  "{%-\\?\\s*\\<block\\>.*-\\?%}:{%-\\?\\s*\\<endblock\\>.*-\\?%}",
 
   -- Macro definitions
-  "{%\\s*\\<macro\\>.*%}:{%\\s*\\<endmacro\\>.*%}",
+  "{%-\\?\\s*\\<macro\\>.*-\\?%}:{%-\\?\\s*\\<endmacro\\>.*-\\?%}",
 
   -- Call blocks
-  "{%\\s*\\<call\\>.*%}:{%\\s*\\<endcall\\>.*%}",
+  "{%-\\?\\s*\\<call\\>.*-\\?%}:{%-\\?\\s*\\<endcall\\>.*-\\?%}",
 
   -- Filter blocks
-  "{%\\s*\\<filter\\>.*%}:{%\\s*\\<endfilter\\>.*%}",
+  "{%-\\?\\s*\\<filter\\>.*-\\?%}:{%-\\?\\s*\\<endfilter\\>.*-\\?%}",
 
   -- Set blocks
-  "{%\\s*\\<set\\>.*%}:{%\\s*\\<endset\\>.*%}",
+  "{%-\\?\\s*\\<set\\>.*-\\?%}:{%-\\?\\s*\\<endset\\>.*-\\?%}",
 
   -- Raw blocks (no jinja processing)
-  "{%\\s*\\<raw\\>.*%}:{%\\s*\\<endraw\\>.*%}",
+  "{%-\\?\\s*\\<raw\\>.*-\\?%}:{%-\\?\\s*\\<endraw\\>.*-\\?%}",
 
   -- Autoescape blocks
-  "{%\\s*\\<autoescape\\>.*%}:{%\\s*\\<endautoescape\\>.*%}",
+  "{%-\\?\\s*\\<autoescape\\>.*-\\?%}:{%-\\?\\s*\\<endautoescape\\>.*-\\?%}",
 
   -- With blocks
-  "{%\\s*\\<with\\>.*%}:{%\\s*\\<endwith\\>.*%}",
+  "{%-\\?\\s*\\<with\\>.*-\\?%}:{%-\\?\\s*\\<endwith\\>.*-\\?%}",
 
   -- Translation blocks
-  "{%\\s*\\<trans\\>.*%}:{%\\s*\\<endtrans\\>.*%}",
-  "{%\\s*\\<blocktrans\\>.*%}:{%\\s*\\<endblocktrans\\>.*%}",
+  "{%-\\?\\s*\\<trans\\>.*-\\?%}:{%-\\?\\s*\\<endtrans\\>.*-\\?%}",
+  "{%-\\?\\s*\\<blocktrans\\>.*-\\?%}:{%-\\?\\s*\\<endblocktrans\\>.*-\\?%}",
 }, ",")
 
 -- Set up matchit.vim patterns (fallback for vim-matchup)
