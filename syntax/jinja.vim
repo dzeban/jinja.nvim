@@ -3,7 +3,7 @@
 " Maintainer:   Claude
 " Last Change:  2025-10-21
 
-" Load base syntax if specified
+" Determine base syntax if specified
 " Users can set g:jinja_base_syntax to specify the underlying format
 " For example: let g:jinja_base_syntax = 'html'
 " If not set, tries to auto-detect from filename patterns
@@ -13,7 +13,7 @@ if !exists("g:jinja_base_syntax")
 
   " Auto-detect base syntax from filename patterns
   let s:filename = expand('%:t')
-  if s:filename =~? '\.html\.\(jinja\|jinja2\|j2\)$'
+  if s:filename =~? '\.html\?\.\(jinja\|jinja2\|j2\)$'
     let g:jinja_base_syntax = 'html'
   elseif s:filename =~? '\.xml\.\(jinja\|jinja2\|j2\)$'
     let g:jinja_base_syntax = 'xml'
@@ -40,14 +40,14 @@ endif
 syntax case match
 
 " Comments (supports whitespace control with {#- and -#})
-syntax region jinjaComment start="{#-\?" end="-\?#}" contains=jinjaTodo containedin=ALL
+syntax region jinjaComment start="{#-\?" end="-\?#}" contains=jinjaTodo containedin=ALL keepend
 syntax keyword jinjaTodo contained TODO FIXME XXX NOTE
 
 " Variable blocks (supports whitespace control with {{- and -}})
-syntax region jinjaVariable start="{{-\?" end="-\?}}" contains=jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial containedin=ALL
+syntax region jinjaVariable start="{{-\?" end="-\?}}" contains=jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial containedin=ALL keepend
 
 " Statement blocks (supports whitespace control with {%- and -%})
-syntax region jinjaStatement start="{%-\?" end="-\?%}" contains=jinjaTagBlock,jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial containedin=ALL
+syntax region jinjaStatement start="{%-\?" end="-\?%}" contains=jinjaTagBlock,jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial containedin=ALL keepend
 
 " Jinja tags
 syntax keyword jinjaTagBlock contained if elif else endif for endfor block endblock extends include
@@ -91,5 +91,13 @@ highlight def link jinjaString String
 highlight def link jinjaNumber Number
 highlight def link jinjaKeyword Keyword
 highlight def link jinjaSpecial Special
+
+" Sync settings for better performance and accuracy
+" Sync by searching for Jinja blocks
+syn sync match jinjaSync grouphere NONE "{%"
+syn sync match jinjaSync grouphere NONE "{{"
+syn sync match jinjaSync grouphere NONE "{#"
+syn sync minlines=50
+syn sync maxlines=500
 
 let b:current_syntax = "jinja"
