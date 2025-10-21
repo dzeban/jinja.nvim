@@ -10,15 +10,15 @@ endif
 " Jinja template syntax
 syntax case match
 
-" Comments
-syntax region jinjaComment start="{#" end="#}" contains=jinjaTodo
+" Comments (supports whitespace control with {#- and -#})
+syntax region jinjaComment start="{#-\?" end="-\?#}" contains=jinjaTodo
 syntax keyword jinjaTodo contained TODO FIXME XXX NOTE
 
-" Variable blocks
-syntax region jinjaVariable start="{{" end="}}" contains=jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword
+" Variable blocks (supports whitespace control with {{- and -}})
+syntax region jinjaVariable start="{{-\?" end="-\?}}" contains=jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword
 
-" Statement blocks
-syntax region jinjaStatement start="{%" end="%}" contains=jinjaTagBlock,jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword
+" Statement blocks (supports whitespace control with {%- and -%})
+syntax region jinjaStatement start="{%-\?" end="-\?%}" contains=jinjaTagBlock,jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword
 
 " Jinja tags
 syntax keyword jinjaTagBlock contained if elif else endif for endfor block endblock extends include
