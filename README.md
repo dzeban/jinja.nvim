@@ -10,6 +10,7 @@ A modern Neovim plugin for Jinja2 template support, written in Lua. Provides com
   - Comments (`{# #}`)
   - Filters, operators, strings, and numbers
   - Built-in keywords and special variables
+  - **Base format highlighting**: Highlights the underlying file format (HTML, YAML, XML, CSS, JavaScript) alongside Jinja syntax
 
 - **File Type Detection**: Automatic detection for:
   - `*.jinja`
@@ -120,6 +121,32 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 ```
 
+### Base Syntax Highlighting
+
+The plugin automatically detects and highlights the underlying file format based on filename patterns:
+
+- `*.html.jinja`, `*.html.jinja2`, `*.html.j2` → HTML highlighting
+- `*.yaml.jinja`, `*.yml.jinja`, etc. → YAML highlighting
+- `*.xml.jinja`, `*.xml.jinja2`, etc. → XML highlighting
+- `*.css.jinja`, `*.scss.jinja`, etc. → CSS highlighting
+- `*.js.jinja`, `*.js.jinja2`, etc. → JavaScript highlighting
+- `*.sls`, `*.yaml`, `*.yml` → YAML highlighting (for Salt/Ansible)
+
+You can manually specify the base syntax by setting `g:jinja_base_syntax`:
+
+```vim
+" Force HTML syntax highlighting for all Jinja files
+let g:jinja_base_syntax = 'html'
+```
+
+Or in Lua:
+
+```lua
+vim.g.jinja_base_syntax = 'html'
+```
+
+Supported base syntaxes include: `html`, `xml`, `yaml`, `css`, `scss`, `javascript`, and any other Vim syntax file available in your runtime path.
+
 ## Comparison with Other Plugins
 
 This plugin is designed as a modern, Lua-based replacement for:
@@ -130,10 +157,12 @@ This plugin is designed as a modern, Lua-based replacement for:
 Key differences:
 
 - Written in Lua for better Neovim integration
-- Focused on generic Jinja2 templates (no HTML/Django-specific features)
+- Supports highlighting both Jinja syntax and base file formats (HTML, YAML, etc.)
 - Built-in vim-matchup support
-- Optimized for SaltStack `.sls` files
+- Automatic base syntax detection from filename patterns
+- Optimized for SaltStack `.sls` files and Ansible templates
 - Cleaner, more maintainable codebase
+- Supports whitespace control syntax (`{%-`, `-%}`, etc.)
 
 ## Contributing
 

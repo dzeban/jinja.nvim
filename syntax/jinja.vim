@@ -3,22 +3,51 @@
 " Maintainer:   Claude
 " Last Change:  2025-10-21
 
-if exists("b:current_syntax")
-  finish
+" Load base syntax if specified
+" Users can set g:jinja_base_syntax to specify the underlying format
+" For example: let g:jinja_base_syntax = 'html'
+" If not set, tries to auto-detect from filename patterns
+
+if !exists("g:jinja_base_syntax")
+  let g:jinja_base_syntax = ""
+
+  " Auto-detect base syntax from filename patterns
+  let s:filename = expand('%:t')
+  if s:filename =~? '\.html\.\(jinja\|jinja2\|j2\)$'
+    let g:jinja_base_syntax = 'html'
+  elseif s:filename =~? '\.xml\.\(jinja\|jinja2\|j2\)$'
+    let g:jinja_base_syntax = 'xml'
+  elseif s:filename =~? '\.ya\?ml\.\(jinja\|jinja2\|j2\)$'
+    let g:jinja_base_syntax = 'yaml'
+  elseif s:filename =~? '\.s\?css\.\(jinja\|jinja2\|j2\)$'
+    let g:jinja_base_syntax = 'css'
+  elseif s:filename =~? '\.js\.\(jinja\|jinja2\|j2\)$'
+    let g:jinja_base_syntax = 'javascript'
+  elseif s:filename =~? '\.\(yaml\|yml\|sls\)$'
+    " Salt/Ansible YAML files often use Jinja
+    let g:jinja_base_syntax = 'yaml'
+  endif
+endif
+
+" Load the base syntax if one is set
+if g:jinja_base_syntax != ""
+  unlet! b:current_syntax
+  execute 'runtime! syntax/' . g:jinja_base_syntax . '.vim'
+  unlet! b:current_syntax
 endif
 
 " Jinja template syntax
 syntax case match
 
 " Comments (supports whitespace control with {#- and -#})
-syntax region jinjaComment start="{#-\?" end="-\?#}" contains=jinjaTodo
+syntax region jinjaComment start="{#-\?" end="-\?#}" contains=jinjaTodo containedin=ALL
 syntax keyword jinjaTodo contained TODO FIXME XXX NOTE
 
 " Variable blocks (supports whitespace control with {{- and -}})
-syntax region jinjaVariable start="{{-\?" end="-\?}}" contains=jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword
+syntax region jinjaVariable start="{{-\?" end="-\?}}" contains=jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial containedin=ALL
 
 " Statement blocks (supports whitespace control with {%- and -%})
-syntax region jinjaStatement start="{%-\?" end="-\?%}" contains=jinjaTagBlock,jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword
+syntax region jinjaStatement start="{%-\?" end="-\?%}" contains=jinjaTagBlock,jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial containedin=ALL
 
 " Jinja tags
 syntax keyword jinjaTagBlock contained if elif else endif for endfor block endblock extends include
