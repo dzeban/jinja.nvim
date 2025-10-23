@@ -93,11 +93,14 @@ highlight def link jinjaKeyword Keyword
 highlight def link jinjaSpecial Special
 
 " Sync settings for better performance and accuracy
-" Sync by searching for Jinja blocks
+" Sync by searching for Jinja blocks (including chomped/whitespace-control variants)
 syn sync match jinjaSync grouphere NONE "{%"
+syn sync match jinjaSync grouphere NONE "{%-"
 syn sync match jinjaSync grouphere NONE "{{"
+syn sync match jinjaSync grouphere NONE "{{-"
 syn sync match jinjaSync grouphere NONE "{#"
+syn sync match jinjaSync grouphere NONE "{#-"
 syn sync minlines=50
-syn sync maxlines=500
+syn sync maxlines=1000
 
 let b:current_syntax = "jinja"
