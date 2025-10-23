@@ -44,10 +44,10 @@ syntax region jinjaComment start="{#-\?" end="-\?#}" contains=jinjaTodo containe
 syntax keyword jinjaTodo contained TODO FIXME XXX NOTE
 
 " Variable blocks (supports whitespace control with {{- and -}})
-syntax region jinjaVariable start="{{-\?" end="-\?}}" contains=jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial,jinjaFunction,jinjaAttribute,jinjaBuiltin containedin=ALL keepend
+syntax region jinjaVariable start="{{-\?" end="-\?}}" contains=jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial,jinjaFunction,jinjaAttribute,jinjaBuiltin,jinjaIdentifier containedin=ALL keepend
 
 " Statement blocks (supports whitespace control with {%- and -%})
-syntax region jinjaStatement start="{%-\?" end="-\?%}" contains=jinjaTagBlock,jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial,jinjaFunction,jinjaAttribute,jinjaBuiltin containedin=ALL keepend
+syntax region jinjaStatement start="{%-\?" end="-\?%}" contains=jinjaTagBlock,jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial,jinjaFunction,jinjaAttribute,jinjaBuiltin,jinjaIdentifier containedin=ALL keepend
 
 " Jinja tags
 syntax keyword jinjaTagBlock contained if elif else endif for endfor block endblock extends include
@@ -93,6 +93,10 @@ syntax match jinjaFunction contained /\<\w\+\>\ze\s*(/
 " Attribute/property access (dot followed by identifier)
 syntax match jinjaAttribute contained /\.\@<=\w\+/
 
+" Plain identifiers (variable names, not matching other patterns)
+" This catches regular identifiers that aren't keywords, builtins, etc.
+syntax match jinjaIdentifier contained /\<\w\+\>/
+
 " Define highlighting
 highlight def link jinjaComment Comment
 highlight def link jinjaTodo Todo
@@ -108,6 +112,7 @@ highlight def link jinjaSpecial Special
 highlight def link jinjaBuiltin Type
 highlight def link jinjaFunction Function
 highlight def link jinjaAttribute Identifier
+highlight def link jinjaIdentifier NONE
 
 " Sync settings for better performance and accuracy
 " Sync by searching for Jinja blocks (including chomped/whitespace-control variants)
