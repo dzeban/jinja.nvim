@@ -34,6 +34,8 @@ let b:match_words =
 " Set up matchit.vim patterns (fallback for vim-matchup)
 let b:match_ignorecase = 0
 
+" Note: vim-matchup configuration is in plugin/jinja.vim (loads before buffers)
+
 " Indentation settings
 setlocal expandtab
 setlocal shiftwidth=2

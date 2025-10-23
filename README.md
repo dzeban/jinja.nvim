@@ -93,6 +93,8 @@ If you have [vim-matchup](https://github.com/andymass/vim-matchup) installed, yo
 - Press `z%` to navigate inside blocks
 - Use text objects like `i%` and `a%` for inner/around blocks
 
+**Note for large files**: This plugin automatically configures vim-matchup to handle Jinja files with long control structures. It sets `g:matchup_matchparen_stopline = 1000` (default is 400 lines), which allows match highlighting to work correctly even when `{% if %}` and `{% else %}` blocks are hundreds of lines apart.
+
 ### Example
 
 ```jinja
