@@ -44,10 +44,10 @@ syntax region jinjaComment start="{#-\?" end="-\?#}" contains=jinjaTodo containe
 syntax keyword jinjaTodo contained TODO FIXME XXX NOTE
 
 " Variable blocks (supports whitespace control with {{- and -}})
-syntax region jinjaVariable start="{{-\?" end="-\?}}" contains=jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial containedin=ALL keepend
+syntax region jinjaVariable start="{{-\?" end="-\?}}" contains=jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial,jinjaFunction,jinjaAttribute,jinjaBuiltin,jinjaIdentifier containedin=ALL keepend
 
 " Statement blocks (supports whitespace control with {%- and -%})
-syntax region jinjaStatement start="{%-\?" end="-\?%}" contains=jinjaTagBlock,jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial containedin=ALL keepend
+syntax region jinjaStatement start="{%-\?" end="-\?%}" contains=jinjaTagBlock,jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial,jinjaFunction,jinjaAttribute,jinjaBuiltin,jinjaIdentifier containedin=ALL keepend
 
 " Jinja tags
 syntax keyword jinjaTagBlock contained if elif else endif for endfor block endblock extends include
@@ -79,6 +79,24 @@ syntax keyword jinjaKeyword contained range lipsum dict cycler joiner namespace
 " Special variables
 syntax keyword jinjaSpecial contained loop super self varargs kwargs
 
+" Common builtin variables and context objects
+" SaltStack: pillar, grains, salt, opts
+" Flask/Django: request, session, config, g, app
+" Ansible: inventory_hostname, group_names, hostvars
+syntax keyword jinjaBuiltin contained pillar grains salt opts
+syntax keyword jinjaBuiltin contained request session config g app
+syntax keyword jinjaBuiltin contained inventory_hostname group_names hostvars
+
+" Function calls (identifier followed by opening parenthesis)
+syntax match jinjaFunction contained /\<\w\+\>\ze\s*(/
+
+" Attribute/property access (dot followed by identifier)
+syntax match jinjaAttribute contained /\.\@<=\w\+/
+
+" Plain identifiers (variable names, not matching other patterns)
+" This catches regular identifiers that aren't keywords, builtins, etc.
+syntax match jinjaIdentifier contained /\<\w\+\>/
+
 " Define highlighting
 highlight def link jinjaComment Comment
 highlight def link jinjaTodo Todo
@@ -91,13 +109,20 @@ highlight def link jinjaString String
 highlight def link jinjaNumber Number
 highlight def link jinjaKeyword Keyword
 highlight def link jinjaSpecial Special
+highlight def link jinjaBuiltin Type
+highlight def link jinjaFunction Function
+highlight def link jinjaAttribute Identifier
+highlight def link jinjaIdentifier NONE
 
 " Sync settings for better performance and accuracy
-" Sync by searching for Jinja blocks
+" Sync by searching for Jinja blocks (including chomped/whitespace-control variants)
 syn sync match jinjaSync grouphere NONE "{%"
+syn sync match jinjaSync grouphere NONE "{%-"
 syn sync match jinjaSync grouphere NONE "{{"
+syn sync match jinjaSync grouphere NONE "{{-"
 syn sync match jinjaSync grouphere NONE "{#"
+syn sync match jinjaSync grouphere NONE "{#-"
 syn sync minlines=50
-syn sync maxlines=500
+syn sync maxlines=1000
 
 let b:current_syntax = "jinja"
