@@ -43,11 +43,14 @@ syntax case match
 syntax region jinjaComment start="{#-\?" end="-\?#}" contains=jinjaTodo containedin=ALL keepend
 syntax keyword jinjaTodo contained TODO FIXME XXX NOTE
 
+" Raw blocks (content is not processed as Jinja)
+syntax region jinjaRaw matchgroup=jinjaRawDelim start="{%\s*raw\s*%}" end="{%\s*endraw\s*%}" containedin=ALL keepend
+
 " Variable blocks (supports whitespace control with {{- and -}})
-syntax region jinjaVariable start="{{-\?" end="-\?}}" contains=jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial,jinjaFunction,jinjaAttribute,jinjaBuiltin,jinjaIdentifier containedin=ALL keepend
+syntax region jinjaVariable start="{{-\?" end="-\?}}" contains=jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial,jinjaFunction,jinjaAttribute,jinjaBuiltin,jinjaIdentifier,jinjaTest,jinjaFilterName containedin=ALLBUT,jinjaRaw,jinjaComment keepend
 
 " Statement blocks (supports whitespace control with {%- and -%})
-syntax region jinjaStatement start="{%-\?" end="-\?%}" contains=jinjaTagBlock,jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial,jinjaFunction,jinjaAttribute,jinjaBuiltin,jinjaIdentifier containedin=ALL keepend
+syntax region jinjaStatement start="{%-\?" end="-\?%}" contains=jinjaTagBlock,jinjaFilter,jinjaOperator,jinjaString,jinjaNumber,jinjaKeyword,jinjaSpecial,jinjaFunction,jinjaAttribute,jinjaBuiltin,jinjaIdentifier,jinjaTest,jinjaFilterName containedin=ALLBUT,jinjaRaw,jinjaComment keepend
 
 " Jinja tags
 syntax keyword jinjaTagBlock contained if elif else endif for endfor block endblock extends include
@@ -79,13 +82,34 @@ syntax keyword jinjaKeyword contained range lipsum dict cycler joiner namespace
 " Special variables
 syntax keyword jinjaSpecial contained loop super self varargs kwargs
 
+" Built-in tests (used with 'is' keyword)
+syntax keyword jinjaTest contained defined undefined none number string
+syntax keyword jinjaTest contained mapping sequence iterable callable
+syntax keyword jinjaTest contained odd even divisibleby equalto
+syntax keyword jinjaTest contained sameas lower upper
+
+" Common built-in filters
+syntax keyword jinjaFilterName contained abs attr batch capitalize center
+syntax keyword jinjaFilterName contained default dictsort escape first float
+syntax keyword jinjaFilterName contained format groupby indent int join last
+syntax keyword jinjaFilterName contained length list lower map max min
+syntax keyword jinjaFilterName contained reject rejectattr replace reverse round safe
+syntax keyword jinjaFilterName contained select selectattr slice sort string sum
+syntax keyword jinjaFilterName contained title trim truncate unique upper
+syntax keyword jinjaFilterName contained urlencode urlize wordcount wordwrap xmlattr
+syntax keyword jinjaFilterName contained tojson forceescape filesizeformat pprint
+
 " Common builtin variables and context objects
-" SaltStack: pillar, grains, salt, opts
+" SaltStack: pillar, grains, salt, opts, saltenv, sls, slspath, slsdotpath, mine
 " Flask/Django: request, session, config, g, app
-" Ansible: inventory_hostname, group_names, hostvars
+" Ansible: inventory_hostname, inventory_hostname_short, group_names, groups,
+"          hostvars, play_hosts, ansible_facts, ansible_version, omit
 syntax keyword jinjaBuiltin contained pillar grains salt opts
+syntax keyword jinjaBuiltin contained saltenv sls slspath slsdotpath mine
 syntax keyword jinjaBuiltin contained request session config g app
-syntax keyword jinjaBuiltin contained inventory_hostname group_names hostvars
+syntax keyword jinjaBuiltin contained inventory_hostname inventory_hostname_short
+syntax keyword jinjaBuiltin contained group_names groups hostvars play_hosts
+syntax keyword jinjaBuiltin contained ansible_facts ansible_version omit
 
 " Function calls (identifier followed by opening parenthesis)
 syntax match jinjaFunction contained /\<\w\+\>\ze\s*(/
@@ -100,11 +124,15 @@ syntax match jinjaIdentifier contained /\<\w\+\>/
 " Define highlighting
 highlight def link jinjaComment Comment
 highlight def link jinjaTodo Todo
+highlight def link jinjaRaw Normal
+highlight def link jinjaRawDelim PreProc
 highlight def link jinjaVariable Identifier
 highlight def link jinjaStatement PreProc
 highlight def link jinjaTagBlock Statement
 highlight def link jinjaOperator Operator
 highlight def link jinjaFilter Function
+highlight def link jinjaFilterName Function
+highlight def link jinjaTest Keyword
 highlight def link jinjaString String
 highlight def link jinjaNumber Number
 highlight def link jinjaKeyword Keyword

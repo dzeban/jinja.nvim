@@ -1,0 +1,79 @@
+{# Test file for new Jinja syntax features #}
+
+{# Test #4: Raw blocks - content inside should NOT be highlighted as Jinja #}
+{% raw %}
+  This should be plain text: {{ variable }}
+  {% if something %} this too {% endif %}
+  {{ user.name|upper }}
+{% endraw %}
+
+{# Test #7: Built-in tests with 'is' keyword #}
+{% if variable is defined %}
+  {% if count is odd %}
+    {% if items is iterable %}
+      {% if func is callable %}
+        {% if x is divisibleby(3) %}
+          {% if a is equalto(b) %}
+            Tests work!
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+{% endif %}
+
+{# Test #8: Common built-in filters #}
+{{ text|capitalize }}
+{{ text|upper }}
+{{ text|lower }}
+{{ items|length }}
+{{ items|first }}
+{{ items|last }}
+{{ items|join(', ') }}
+{{ number|abs }}
+{{ number|round }}
+{{ value|default('N/A') }}
+{{ html|escape }}
+{{ html|safe }}
+{{ list|sort }}
+{{ list|reverse }}
+{{ text|truncate(20) }}
+{{ text|wordcount }}
+{{ dict|dictsort }}
+{{ data|tojson }}
+{{ text|urlencode }}
+{{ size|filesizeformat }}
+{{ value|pprint }}
+
+{# Test #9: Additional Salt-specific builtins #}
+{{ pillar['my.config'] }}
+{{ grains['os'] }}
+{{ salt['cmd.run']('ls') }}
+{{ opts['file_roots'] }}
+{{ saltenv }}
+{{ sls }}
+{{ slspath }}
+{{ slsdotpath }}
+{{ mine.get('target', 'function') }}
+
+{# Test #10: Additional Ansible-specific builtins #}
+{{ inventory_hostname }}
+{{ inventory_hostname_short }}
+{{ group_names }}
+{{ groups['webservers'] }}
+{{ hostvars[inventory_hostname] }}
+{{ play_hosts }}
+{{ ansible_facts['os_family'] }}
+{{ ansible_version }}
+{{ omit }}
+
+{# Combined tests #}
+{% if pillar is defined %}
+  {{ grains['os']|upper }}
+{% endif %}
+
+{% for host in play_hosts %}
+  {% if hostvars[host] is defined %}
+    {{ hostvars[host]['ansible_hostname']|capitalize }}
+  {% endif %}
+{% endfor %}
