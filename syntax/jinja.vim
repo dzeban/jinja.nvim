@@ -55,7 +55,7 @@ syntax region jinjaStatement start="{%-\?" end="-\?%}" contains=jinjaTagBlock,ji
 " Jinja tags
 syntax keyword jinjaTagBlock contained if elif else endif for endfor block endblock extends include
 syntax keyword jinjaTagBlock contained macro endmacro call endcall filter endfilter set endset
-syntax keyword jinjaTagBlock contained raw endraw autoescape endautoescape with endwith
+syntax keyword jinjaTagBlock contained autoescape endautoescape with endwith
 syntax keyword jinjaTagBlock contained do break continue import from as scoped ignore missing
 syntax keyword jinjaTagBlock contained pluralize trans endtrans blocktrans endblocktrans
 
